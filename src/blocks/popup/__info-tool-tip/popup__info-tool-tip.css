@@ -1,0 +1,16 @@
+.popup__info-tool-tip {
+  width: 100%;
+  max-width: 430px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #ffffff;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 540px) {
+  .popup__info-tool-tip {
+    max-width: 282px;
+  }
+}
