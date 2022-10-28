@@ -30,27 +30,43 @@ function App() {
   const [email, setUserEmail] = useState("");
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
   const [infoTooltipImage, setInfoTooltipImage] = useState(imageSuccess);
-  const [title, setTitle] = useState("");
+  const [infoTooltipMessage, setinfoTooltipMessage] = useState("");
 
   const history = useHistory();
 
   useEffect(() => {
-    document.body.classList.add("page");
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getCards()])
+        .then(([userInfo, cards]) => {
+          setCurrentUser(userInfo);
+          setCards(cards);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [loggedIn]);
 
-    return () => {
-      document.body.classList.remove("page");
-    };
-  });
+  function checkToken() {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      auth
+        .checkToken(token)
+        .then((res) => {
+          if (res.data) {
+            setUserEmail(res.data.email);
+            setLoggedIn(true);
+            history.push("/");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
 
   useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getCards()])
-      .then(([userInfo, cards]) => {
-        setCurrentUser(userInfo);
-        setCards(cards);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    checkToken();
   }, []);
 
   const closeAllPopups = () => {
@@ -77,15 +93,8 @@ function App() {
     setSelectedCard(card);
   };
 
-  function handleOverlayClose(e) {
-    if (e.target.classList.contains("popup_opened")) {
-      closeAllPopups();
-    }
-  }
-
   function handleCardLike(card) {
     const isLiked = card.likes.some((item) => item._id === currentUser._id);
-    console.log(isLiked);
     api
       .changeLikeCard(card._id, !isLiked)
       .then((newCard) => {
@@ -154,13 +163,13 @@ function App() {
         if (res.token) {
           setLoggedIn(true);
           localStorage.setItem("jwt", res.token);
-          tokenCheck();
+          setUserEmail(data.email);
           history.push("/");
         }
       })
       .catch((error) => {
         setInfoTooltipImage(imageError);
-        setTitle(infoToolTipErrorMessage);
+        setinfoTooltipMessage(infoToolTipErrorMessage);
         setInfoTooltipOpen(true);
 
         console.log(error);
@@ -172,35 +181,16 @@ function App() {
       .register(registerData)
       .then(() => {
         setInfoTooltipImage(imageSuccess);
-        setTitle(infoToolTipSucsessMessage);
+        setinfoTooltipMessage(infoToolTipSucsessMessage);
         setInfoTooltipOpen(true);
-        console.log(history.push("/sign-in"));
         history.push("/sign-in");
       })
       .catch((error) => {
         setInfoTooltipImage(imageError);
-        setTitle(infoToolTipErrorMessage);
+        setinfoTooltipMessage(infoToolTipErrorMessage);
         setInfoTooltipOpen(true);
         console.log(error);
       });
-  }
-
-  function tokenCheck() {
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      auth
-        .checkToken(token)
-        .then((res) => {
-          if (res.data) {
-            setUserEmail(res.data.email);
-            setLoggedIn(true);
-            history.push("/");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
   }
 
   function handleSignOut() {
@@ -245,36 +235,28 @@ function App() {
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
-        onOverlayClose={handleOverlayClose}
         onUpdateUser={handleUpdateUser}
       />
 
       <EditAvatarPopup
         isOpen={isEditAvatarPopupOpen}
         onClose={closeAllPopups}
-        onOverlayClose={handleOverlayClose}
         onUpdateAvatar={handleUpdateAvatar}
       />
 
       <AddPlacePopup
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
-        onOverlayClose={handleOverlayClose}
         onAddPlace={handleAddPlaceSubmit}
       />
 
-      <ImagePopup
-        card={selectedCard}
-        onClose={closeAllPopups}
-        onOverlayClose={handleOverlayClose}
-      />
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
       <InfoTooltip
-        onOverlayClose={handleOverlayClose}
         isOpen={isInfoTooltipOpen}
         onClose={closeAllPopups}
         image={infoTooltipImage}
-        title={title}
+        infoTooltipMessage={infoTooltipMessage}
       />
     </CurrentUserContext.Provider>
   );

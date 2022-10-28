@@ -1,8 +1,13 @@
-function ImagePopup({ card, onClose, onOverlayClose }) {
+function ImagePopup({ card, onClose }) {
+  function handleOverlayClose(e) {
+    if (e.target.classList.contains("popup_opened")) {
+      onClose();
+    }
+  }
   return (
     <div
       className={`popup popup_type_image  ${card.link ? "popup_opened" : ""}`}
-      onClick={onOverlayClose}
+      onClick={handleOverlayClose}
     >
       <div className="popup__container popup__container-image">
         <button

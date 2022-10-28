@@ -13,12 +13,21 @@ function Main({
 }) {
   const currentUser = useContext(CurrentUserContext);
 
+  const cardsElements = cards.map((card) => (
+    <Card
+      card={card}
+      key={card._id}
+      onCardClick={onCardClick}
+      onCardLike={onCardLike}
+      onCardDelete={onCardDelete}
+    />
+  ));
+
   return (
     <main>
       <section className="profile">
         <div className="profile__item">
           <img
-            // style={{ backgroundImage: `url(${currentUser.avatar})` }}
             src={currentUser.avatar}
             alt={currentUser.name}
             className="profile__image"
@@ -42,17 +51,7 @@ function Main({
           className="profile__add-button"
         />
       </section>
-      <section className="elements">
-        {cards.map((card) => (
-          <Card
-            card={card}
-            key={card._id}
-            onCardClick={onCardClick}
-            onCardLike={onCardLike}
-            onCardDelete={onCardDelete}
-          />
-        ))}
-      </section>
+      <section className="elements">{cardsElements}</section>
     </main>
   );
 }

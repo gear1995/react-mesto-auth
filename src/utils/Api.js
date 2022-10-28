@@ -2,7 +2,6 @@ export class Api {
   constructor(options) {
     this._host = options.host;
     this._token = options.token;
-    this._getJsonOrError = this._getJsonOrError.bind(this);
     this._getHeaders = this._getHeaders.bind(this);
   }
 
@@ -14,18 +13,10 @@ export class Api {
     return Promise.reject(`Ошибка: ${res.status}`);
   }
 
-  _getJsonOrError(res) {
-    if (res.ok) {
-      return res.json();
-    }
-
-    throw new Error("Ошибка при загрузке данных");
-  }
-
   getCards() {
     return fetch(`${this._host}/cards`, {
       headers: this._getHeaders(),
-    }).then((res) => this._checkServerResponse(res));
+    }).then(this._checkServerResponse);
   }
 
   _getHeaders() {
@@ -43,13 +34,13 @@ export class Api {
         name: data.name,
         link: data.link,
       }),
-    }).then((res) => this._checkServerResponse(res));
+    }).then(this._checkServerResponse);
   }
 
   getUserInfo() {
     return fetch(`${this._host}/users/me`, {
       headers: this._getHeaders(),
-    }).then((res) => this._checkServerResponse(res));
+    }).then(this._checkServerResponse);
   }
 
   updateUserInfo(data) {
@@ -60,27 +51,27 @@ export class Api {
         name: data.name,
         about: data.about,
       }),
-    }).then((res) => this._checkServerResponse(res));
+    }).then(this._checkServerResponse);
   }
   deleteCard(id) {
     return fetch(`${this._host}/cards/${id}`, {
       method: "DELETE",
       headers: this._getHeaders(),
-    }).then((res) => this._checkServerResponse(res));
+    }).then(this._checkServerResponse);
   }
 
   setLike(id) {
     return fetch(`${this._host}/cards/${id}/likes`, {
       method: "PUT",
       headers: this._getHeaders(),
-    }).then((res) => this._checkServerResponse(res));
+    }).then(this._checkServerResponse);
   }
 
   deleteLike(id) {
     return fetch(`${this._host}/cards/${id}/likes`, {
       method: "DELETE",
       headers: this._getHeaders(),
-    }).then((res) => this._checkServerResponse(res));
+    }).then(this._checkServerResponse);
   }
 
   changeLikeCard(id, isLiked) {
@@ -98,7 +89,7 @@ export class Api {
       body: JSON.stringify({
         avatar: data.avatar,
       }),
-    }).then((res) => this._checkServerResponse(res));
+    }).then(this._checkServerResponse);
   }
 }
 

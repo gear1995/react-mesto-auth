@@ -1,11 +1,11 @@
 import PopupWithForm from "./PopupWithForm";
 import React, { useState, useEffect } from "react";
 
-function AddPlacePopup(props) {
+function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
 
-  const handleCardName = (e) => {
+  const handleCardNameChange = (e) => {
     setName(e.target.value);
   };
 
@@ -16,7 +16,7 @@ function AddPlacePopup(props) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    props.onAddPlace({
+    onAddPlace({
       name,
       link: link,
     });
@@ -25,16 +25,15 @@ function AddPlacePopup(props) {
   useEffect(() => {
     setName("");
     setLink("");
-  }, [props.isOpen]);
+  }, [isOpen]);
 
   return (
     <PopupWithForm
       name={"adding"}
       title="Новое место"
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      isOpen={isOpen}
+      onClose={onClose}
       buttonText="Создать"
-      onOverlayClose={props.onOverlayClose}
       onSubmit={handleSubmit}
     >
       <input
@@ -47,7 +46,7 @@ function AddPlacePopup(props) {
         minLength="2"
         maxLength="30"
         value={name}
-        onChange={handleCardName}
+        onChange={handleCardNameChange}
       />
       <span id="error-title" className="error-massage"></span>
       <input

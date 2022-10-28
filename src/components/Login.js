@@ -17,7 +17,6 @@ const Login = ({ onLogin }) => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     onLogin(userData);
-    setUserData({ email: "", password: "" });
   };
 
   return (
@@ -34,7 +33,6 @@ const Login = ({ onLogin }) => {
         value={userData.email}
         onChange={handleChange}
       />
-      <span className="error-massage"></span>
       <input
         className="form__input"
         type="password"
@@ -45,7 +43,6 @@ const Login = ({ onLogin }) => {
         value={userData.password}
         onChange={handleChange}
       />
-      <span className="error-massage"></span>
       <button className="form__save-button" type="submit">
         Войти
       </button>
