@@ -5,6 +5,6 @@
 Применяемые технологии:
 
 React JS
-Java Script
+JavaScript
 HTML5
 CSS3
