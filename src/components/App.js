@@ -30,7 +30,7 @@ function App() {
   const [email, setUserEmail] = useState("");
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
   const [infoTooltipImage, setInfoTooltipImage] = useState(imageSuccess);
-  const [infoTooltipMessage, setinfoTooltipMessage] = useState("");
+  const [infoTooltipMessage, setInfoTooltipMessage] = useState("");
 
   const history = useHistory();
 
@@ -169,7 +169,7 @@ function App() {
       })
       .catch((error) => {
         setInfoTooltipImage(imageError);
-        setinfoTooltipMessage(infoToolTipErrorMessage);
+        setInfoTooltipMessage(infoToolTipErrorMessage);
         setInfoTooltipOpen(true);
 
         console.log(error);
@@ -181,13 +181,13 @@ function App() {
       .register(registerData)
       .then(() => {
         setInfoTooltipImage(imageSuccess);
-        setinfoTooltipMessage(infoToolTipSucsessMessage);
+        setInfoTooltipMessage(infoToolTipSucsessMessage);
         setInfoTooltipOpen(true);
         history.push("/sign-in");
       })
       .catch((error) => {
         setInfoTooltipImage(imageError);
-        setinfoTooltipMessage(infoToolTipErrorMessage);
+        setInfoTooltipMessage(infoToolTipErrorMessage);
         setInfoTooltipOpen(true);
         console.log(error);
       });
